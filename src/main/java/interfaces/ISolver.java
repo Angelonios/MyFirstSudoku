@@ -8,17 +8,24 @@ package interfaces;
 import objects.Grid;
 
 /**
- *
+ * This is and programming interface for Solver object. The Solver object can
+ generally solve any difficulty sudoku grid, even an empty grid. That is why
+ this solver is used to create a solved sudoku grid from an empty Grid_old object.
+ This interface offers three options for generating a solved sudoku grid.
  * @author AsusPC
  */
 public interface ISolver {
     
     /**
-     * Solves sudoku puzzles on any difficulty. It can be used to fill an empty
-     * grid in order to create a sudoku puzzle.
-     * @param r
-     * @param c
+     * This method takes a Grid_old object and fills it with numbers in order to
+ maintain the rule of one
+     * @param grid Grid_old object containing int[][].
      */
-    public boolean solve(int r, int c);
+    public void fillSudoku(Grid grid);
+    
+    /**
+     * This method fills int[][] grid stored in solver class as current grid.
+     */
+    public void fillSudoku();
     
 }

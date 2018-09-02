@@ -15,7 +15,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import objects.Game;
-import objects.Grid;
+import objects.Grid_old;
 
 /**
  *
@@ -23,29 +23,36 @@ import objects.Grid;
  */
 public class Table {
     
-    /*The starting grid of the game.*/
-    protected String startingGrid;
-    /*The pane in which are stacked all sudoku cells.*/
     private Pane root;
     private Game game;
-    private Grid gameGrid;
-    private Grid solvedGrid;
-    /*Variable to hold current cell which has focus.*/
     private Cell currentCell;
-    private boolean validate;
 
-    public Table(Game g) {
-        this.currentCell = null;
-        this.game = g;
-        this.gameGrid = g.getGameGrid();
-        this.solvedGrid = g.getSolvedGrid();
-        this.validate = false;
+    /**
+     *
+     */
+    protected boolean validate;
+   
+    /**
+     *
+     */
+    protected String startingGrid;
+    
+    /**
+     *
+     * @param g
+     */
+    public Table(Game g){
+        game = g;
     }
     
     void setValidate(boolean b) {
         validate = b;
     }
 
+    /**
+     *
+     * @param cell
+     */
     public void setCurrentCell(Cell cell) {
         if (currentCell == null) {
             currentCell = cell;
@@ -69,6 +76,10 @@ public class Table {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public Cell getCurrentCell() {
         return currentCell;
     }
@@ -82,9 +93,9 @@ public class Table {
      */
     public Parent createContent() {
         root = new Pane();
-        startingGrid = gameGrid.exportSudoku();
+        startingGrid = game.getGameGrid().exportSudoku();
         List<Cell> cells = fillCellList(startingGrid,
-                solvedGrid.exportSudoku());
+                game.getSolvedGrid().exportSudoku());
 
         for (int i = 0; i < cells.size(); i++) {
             Cell cell = cells.get(i);
@@ -137,12 +148,16 @@ public class Table {
         return cells;
     }
 
+    /**
+     *
+     */
     protected void showWrongCells() {
+        validate = true;
         ObservableList<Node> allNodes = root.getChildren();
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                if (gameGrid.getGrid()[i][j] != solvedGrid.getGrid()[i][j]
-                        && gameGrid.getGrid()[i][j] != 0) {
+                if (!game.evaluateCell(i, j) && game.getGameGrid()
+                                                   .getNum(i, j) != 0) {
                     for (Node n : allNodes) {
                         if (n.getUserData().equals("Cell")) {
                             Cell cell = (Cell) n;
@@ -156,7 +171,11 @@ public class Table {
         }
     }
 
+    /**
+     *
+     */
     protected void hideWrongCells() {
+        validate = false;
         ObservableList<Node> allNodes = root.getChildren();
         for (Node n : allNodes) {
             if (n.getUserData().equals("Cell")) {
@@ -167,6 +186,9 @@ public class Table {
         currentCell.setColor(Color.BEIGE);
     }
     
+    /**
+     *
+     */
     protected void updateGameGrid() {
         ObservableList<Node> allNodes = root.getChildren();
         Iterator<Node> it = allNodes.iterator();
@@ -174,7 +196,7 @@ public class Table {
             for (int j = 0; j < 9; j++) {
                 if (it.hasNext()) {
                     Cell cell = (Cell) it.next();
-                    cell.setNumber(gameGrid.getGrid()[i][j]);
+                    cell.setNumber(game.getGameGrid().getNum(i, j));
                 } else {
                     return;
                 }
@@ -185,15 +207,15 @@ public class Table {
     /**
      * @return the gameGrid
      */
-    public Grid getGameGrid() {
-        return gameGrid;
+    public Grid_old getGameGrid() {
+        return game.getGameGrid();
     }
 
     /**
      * @return the solvedGrid
      */
-    public Grid getSolvedGrid() {
-        return solvedGrid;
+    public Grid_old getSolvedGrid() {
+        return game.getSolvedGrid();
     }
 
 }

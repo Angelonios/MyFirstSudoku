@@ -32,6 +32,10 @@ public class Cell extends StackPane {
     private Rectangle border;
     private Text text = new Text();
 
+    /**
+     *
+     * @return
+     */
     public boolean isCorrect() {
         String value = text.getText();
         if (value.isEmpty() || value.equals(" ")) {
@@ -40,41 +44,77 @@ public class Cell extends StackPane {
         return RIGHT_NUMBER == Integer.parseInt(value);
     }
 
+    /**
+     *
+     * @return
+     */
     public int getRightNumber() {
         return RIGHT_NUMBER;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getRow() {
         return ROW;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getCol() {
         return COL;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getNumber() {
         return this.text.getText();
     }
 
+    /**
+     *
+     * @param number
+     */
     public void setNumber(int number) {
         if (number == 0) {
             this.text.setText(" ");
-            table.getGameGrid().setCell(this.ROW, this.COL, number);
+            table.getGameGrid().addNum(this.ROW, this.COL, number);
         } else {
             String s = Integer.toString(number);
             this.text.setText(s);
-            table.getGameGrid().setCell(this.ROW, this.COL, number);
+            table.getGameGrid().addNum(this.ROW, this.COL, number);
         }
     }
 
+    /**
+     *
+     * @return
+     */
     protected Color getColor() {
         return (Color) border.getFill();
     }
 
+    /**
+     *
+     * @param color
+     */
     protected void setColor(Color color) {
         border.setFill(color);
     }
 
+    /**
+     *
+     * @param row
+     * @param col
+     * @param number
+     * @param text
+     * @param t
+     */
     public Cell(int row, int col, int number, String text, Table t) {
         this.table = t;
         RIGHT_NUMBER = number;
@@ -104,6 +144,9 @@ public class Cell extends StackPane {
             public void handle(MouseEvent e) {
                 if (unmodifiable) {
                     return;
+                }
+                if(table.validate){
+                    table.showWrongCells();
                 }
                 table.setCurrentCell(Cell.this);
                 Cell.this.requestFocus();

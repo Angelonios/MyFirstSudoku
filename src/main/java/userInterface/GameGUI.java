@@ -26,16 +26,16 @@ import objects.Game;
  * @author AsusPC
  */
 public class GameGUI extends Application {
-    
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         BorderPane panel = new BorderPane();
 
         Game game = new Game();
-     
         Table table = new Table(game);
         Controller controller = new Controller(game, table);
-
+        
+        game.startGame();
         panel.setCenter(table.createContent() /*sudokuUI*/);
         panel.setRight(controller.createContent());
 
@@ -48,6 +48,9 @@ public class GameGUI extends Application {
                 } else if (e.getCode() == KeyCode.BACK_SPACE
                         || e.getCode() == KeyCode.DELETE) {
                     table.getCurrentCell().setNumber(0);
+                }
+                if(table.validate){
+                    table.showWrongCells();
                 }
 
             }

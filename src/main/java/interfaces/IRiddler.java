@@ -16,18 +16,21 @@ public interface IRiddler {
     /**
      * This method generates an easy sudoku puzzle, meaning it removes 15
      * symmetric pairs of cells from a validly filled grid.
+     * @param grid
      */
     public void generateEasySudoku(Grid grid);
     
     /**
      * This method generates an easy sudoku puzzle, meaning it removes 20
      * symmetric pairs of cells from a validly filled grid.
+     * @param grid
      */
     public void generateMediumSudoku(Grid grid);
     
     /**
      * This method generates an easy sudoku puzzle, meaning it removes 25
      * symmetric pairs of cells from a validly filled grid.
+     * @param grid
      */
     public void generateHardSudoku(Grid grid);
     

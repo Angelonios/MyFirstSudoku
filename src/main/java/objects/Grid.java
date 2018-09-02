@@ -6,140 +6,212 @@
 package objects;
 
 import interfaces.IGrid;
+import java.util.stream.Stream;
 
 /**
  *
  * @author AsusPC
  */
-public class Grid implements IGrid {
-
-    /*Sudoku has always 9 rows*/
-    private static final int ROWS;
-    /*Sudoku has always 9 columns*/
-    private static final int COLS;
-    /*Sudoku is expressed with a 2D array.*/
-    protected int[][] grid;
-
-    static {
-        ROWS = 9;
-        COLS = 9;
-    }
-
-    /**
-     * Constructor of grid, takes final values of rows and columns and
-     * initializes an empty 2D array.
-     */
-    public Grid() {
-        grid = new int[ROWS][ROWS];
+public class Grid implements IGrid{
+    
+    public static final int DIMENSION = 9;
+    private Cell[] cells;
+    private Cell currentCell;
+    
+    public Grid(){
+        cells = new Cell[DIMENSION*DIMENSION];
+        buildGrid();
+        currentCell = null;
     }
     
     public Grid(Grid grid){
-        this();
-        for(int i = 0; i < ROWS; i++){
-            System.arraycopy(grid.grid[i], 0, this.grid[i], 0, COLS);
-        }
+        this.cells = grid.cells;
+        currentCell = null;
+    }
+    public Grid(Cell[] cells){
+        this.cells = cells;
+        currentCell = null;
     }
     
-    public Grid(int[][] grid){
-        this();
-        for(int i = 0; i < ROWS; i++){
-            System.arraycopy(grid[i], 0, this.grid[i], 0, COLS);
-        }
+    @Override
+    public void addCell(int num, int row, int col){
+        cells[Point.getPosition(row, col)] = 
+                new Cell(num, num, row, col);
+    }
+    
+    @Override
+    public void addCell(int num, int position) {
+        int row = position/9;
+        int col = position%9;
+        cells[position] = new Cell(num, num, row, col);
+    }
+    
+    @Override
+    public void addCell(int num, Point point) {
+        cells[point.getPosition()] = new Cell(num, num, point);
     }
 
     @Override
-    public void setCell(int row, int col, int num) {
-        grid[row][col] = num;
+    public Cell getCell(int row, int col){
+        return cells[Point.getPosition(row, col)];
     }
 
     @Override
-    public int getCell(int row, int col) {
-        return grid[row][col];
-    }
-
-    public int[][] getGrid() {
-        return grid;
+    public Cell getCell(int position) {
+        return cells[position]; 
     }
 
     @Override
-    public void printGrid() {
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[i].length; j++) {
-                if (j % 3 != 2) {
-                    if (grid[i][j] == 0) {
-                        System.out.print("_" + "  ");
-                    } else {
-                        System.out.print(grid[i][j] + "  ");
-                    }
-                } else {
-                    if (grid[i][j] == 0) {
-                        System.out.print("_" + "    ");
-                    } else {
-                        System.out.print(grid[i][j] + "    ");
-                    }
-                }
-            }
-            if (i % 3 != 2) {
-                System.out.println();
-            } else {
-                System.out.println("\n");
-            }
-        }
+    public Cell getCell(Point point) {
+        return cells[point.getPosition()];
+    }
+        
+    @Override
+    public void setCurrentCell(int row, int col) {
+        currentCell = cells[Point.getPosition(row, col)];
     }
 
+    @Override
+    public void setCurrentCell(Point point) {
+        currentCell = cells[point.getPosition()];
+    }
+
+    @Override
+    public void setCurrentCell(int position) {
+        currentCell = cells[position];
+    }
+
+    @Override
+    public Cell getCurrentCell() {
+        return currentCell;
+    }
+
+    @Override
+    public Point getCurrentCellPoint() {
+        return currentCell.getPoint();
+    }
+
+    @Override
+    public int getCurrentCellPosition() {
+        return currentCell.getPoint().getPosition();
+    }
+    
+    @Override
+    public Cell[] getCells(){
+        return cells;
+    }
+
+    @Override
+    public Cell[] getCells(Grid grid){
+        return grid.getCells();
+    }    
+    
+    @Override
+    public void setNum(int num, int row, int col){
+        cellAt(row, col).setNum(num);
+    }
+    
+    @Override
+    public void setNum(int num, int position) {
+        cellAt(position).setNum(num);
+    }
+    
+    @Override
+    public void setNum(int num, Point point) {
+        cellAt(point).setNum(num);
+    }
+    
+    @Override
+    public int getNum(int row, int col){
+        return cellAt(row, col).getNum();
+    }
+
+    @Override
+    public int getNum(int position) {
+        return cellAt(position).getNum();
+    }
+    
+    @Override
+    public int getNum(Point point) {
+        return cellAt(point).getNum();
+    }
+    
+    @Override
+    public int getRightNum(int row, int col){
+        return cellAt(row, col).getRightNum();
+    }
+
+    @Override
+    public int getRightNum(int position) {
+        return cellAt(position).getRightNum();
+    }
+    
+    @Override
+    public int getRightNum(Point point) {
+        return cellAt(point).getRightNum();
+    }
+    
+    @Override
+    public void printGrid(){
+        //TODO
+    }
+    
     @Override
     public void parseSudoku(String string) {
-        char[] digits = string.toCharArray();
-
-        if (digits.length != 81) {
-            throw new IllegalArgumentException(
-                    "String doesn't have exactly 81 characters!");
-        }
-
-        int[][] result = new int[ROWS][COLS];
-
-        int temp = 0;
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLS; j++) {
-                result[i][j] = Character.getNumericValue(digits[temp]);
-                ++temp;
-            }
-        }
-
-        this.grid = result;
+        cells = new Cell[DIMENSION*DIMENSION];
+        buildGrid(string);
     }
-
+    
     @Override
     public String exportSudoku() {
-        String result = "";
-
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLS; j++) {
-                result += Integer.toString(this.grid[i][j]);
-            }
-        }
+        String result = new String();
+        Stream.of(cells)
+              .forEach(cell -> result.concat(Integer.toString(cell.getNum())));
         return result;
     }
     
-    public String exportSudoku(int[][] grid) {
-        String result = "";
-
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLS; j++) {
-                result += Integer.toString(grid[i][j]);
-            }
-        }
-        return result;
-    }
-    
+    @Override
     public String exportSudoku(Grid grid) {
-        String result = "";
-
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLS; j++) {
-                result += Integer.toString(grid.getGrid()[i][j]);
-            }
-        }
+        String result = new String();
+        Stream.of(grid.getCells())
+              .forEach(cell -> result.concat(Integer.toString(cell.getNum())));
         return result;
+    }
+
+    private Cell cellAt(int row, int col){
+        Cell cell = cells[Point.getPosition(row, col)];
+        if(cell == null){
+            throw new IllegalArgumentException("No number at this point.");
+        }
+        return cell;
+    }
+    
+    private Cell cellAt(int position){
+        Cell cell = cells[position];
+        if(cell == null){
+            throw new IllegalArgumentException("No number at this point.");
+        }
+        return cell;
+    }
+    
+    private Cell cellAt(Point point){
+        Cell cell = cells[point.getPosition()];
+        if(cell == null){
+            throw new IllegalArgumentException("No number at this point.");
+        }
+        return cell;
+    }
+    
+    private void buildGrid(){
+        for(int i = 0; i < 81; i++){
+            addCell(0, i);
+        }
+    }
+    
+    private void buildGrid(String exportedSudoku){
+        char[] digits = exportedSudoku.toCharArray();
+        for(int i = 0; i < 81; i++){
+            addCell(Character.getNumericValue(digits[i]), i);
+        }
     }
 }

@@ -25,10 +25,20 @@ public class Controller {
     private Table table;
 //    private Solver solver = game.getSolver();
 
+    /**
+     *
+     * @param g
+     * @param t
+     */
     public Controller(Game g, Table t){
         this.game = g;
         this.table = t;
     }
+
+    /**
+     *
+     * @return
+     */
     public Parent createContent() {
         GridPane controlPane = new GridPane();
 
@@ -39,6 +49,9 @@ public class Controller {
             b.setOnAction(event -> {
                 if (table.getCurrentCell() == null) {
                     return;
+                }
+                if(table.validate){
+                    table.showWrongCells();
                 }
                 table.getCurrentCell().setColor(Color.BEIGE);
                 table.getCurrentCell().setNumber(Integer.parseInt(b.getText()));
@@ -58,11 +71,14 @@ public class Controller {
             }
         });
 
-        Button btnSolveCell = new Button("Solve cell");
+        Button btnSolveCell = new Button("Hint");
         btnSolveCell.setOnAction((event) -> {
             Cell cell = table.getCurrentCell();
+            if(cell == null){
+                return;
+            }
             cell.setNumber(
-                    game.getSolvedGrid().getCell(cell.getRow(), cell.getCol())
+                    game.getSolvedGrid().getNum(cell.getRow(), cell.getCol())
             );
         });
 
@@ -75,7 +91,10 @@ public class Controller {
         btnReset.setOnAction(event -> {
             table.getGameGrid().parseSudoku(table.startingGrid);
             table.updateGameGrid();
-            table.hideWrongCells();
+            if(table.validate){
+                table.hideWrongCells();
+                table.showWrongCells();
+            }
         });
 
         btnValidate.setPrefWidth(120);

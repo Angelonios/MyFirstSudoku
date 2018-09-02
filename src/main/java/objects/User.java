@@ -17,17 +17,29 @@ public class User {
     private Game currentGame;
     private List<Game> playedGames;
     
+    /**
+     *
+     * @param name
+     */
     public User(String name){
         this.name = name;
         this.currentGame = null;
         this.playedGames = new ArrayList<>();
     }
 
+    /**
+     *
+     * @param currentGame
+     */
     public void setCurrentGame(Game currentGame) {
         this.currentGame = currentGame;
         this.playedGames.add(currentGame);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return "User{" + "name=" + name + ", playedGames=" + playedGames + 

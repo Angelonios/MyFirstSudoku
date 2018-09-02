@@ -18,16 +18,20 @@ public class Riddler implements IRiddler {
 
     private final Game g;
 
-    private int[][] currentGrid;
+    private Grid currentGrid;
 
+    /**
+     *
+     * @param game
+     */
     public Riddler(Game game) {
         this.g = game;
-        currentGrid = g.gameGrid.getGrid();
+        currentGrid = g.gameGrid;
     }
 
     @Override
     public void generateEasySudoku(Grid grid) {
-        currentGrid = grid.grid;
+        currentGrid = grid;
         int iterations = 30;
         do {
             removeNumber();
@@ -39,7 +43,7 @@ public class Riddler implements IRiddler {
 
     @Override
     public void generateMediumSudoku(Grid grid) {
-        currentGrid = grid.grid;
+        currentGrid = grid;
         int iterations = 20;
         do {
             removeNumber();
@@ -51,7 +55,7 @@ public class Riddler implements IRiddler {
 
     @Override
     public void generateHardSudoku(Grid grid) {
-        currentGrid = grid.grid;
+        currentGrid = grid;
         int iterations = 25;
         do {
             removeNumber();
@@ -61,13 +65,16 @@ public class Riddler implements IRiddler {
         g.gameGrid = new Grid(currentGrid);
     }
 
+    /**
+     *
+     */
     protected void removeNumber() {
         int row;
         int col;
         do {
             row = RAND.nextInt(8);
             col = RAND.nextInt(8);
-        } while (currentGrid[row][col] == 0);
-        currentGrid[row][col] = 0;
+        } while (currentGrid.getNum(row, col) == 0);
+        currentGrid.setNum(0, row, col);
     }
 }

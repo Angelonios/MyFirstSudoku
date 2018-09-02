@@ -5,6 +5,8 @@
  */
 package interfaces;
 
+import objects.Grid;
+
 /**
  *
  * @author AsusPC
@@ -42,20 +44,11 @@ public interface IChecker {
      * This method checks the possibility of inserting a number in specific 
      * place in sudoku and not violating the RULE OF ONE.
      * It uses rowCheck(), colCheck() and sqrCheck() all at once.
+     * @param grid updated game grid.
      * @param row x index.
      * @param col y index.
      * @param num number to be added.
      * @return true/false ~ OK/not good.
      */
-    public boolean checkOneNumber(int[][] grid, int row, int col, int num);
-    
-    /**
-     * This method checks whole sudoku by recursively examing for each number 
-     * possibility of inserting it in specific cell in sudoku and not 
-     * violating the RULE OF ONE.
-     * @param row x index.
-     * @param col y index.
-     * @return true/false ~ OK/not good.
-     */
-    public boolean checkAllNumbers(int row, int col);
+    public boolean checkNum(Grid grid, int row, int col, int num);
 }

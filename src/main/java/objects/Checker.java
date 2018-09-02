@@ -15,25 +15,34 @@ public class Checker implements IChecker{
     
     private Game game;
     
-    private int[][] currentGrid;
+    private Grid currentGrid;
 
+    /**
+     *
+     * @param g
+     */
     public Checker(Game g){
         game = g;
-        currentGrid = g.gameGrid.getGrid();
+        currentGrid = g.gameGrid;
     }
     
-    public void setCurrentGrid(int[][] grid){
-        currentGrid = grid;
-    }
-    
+//    public void setCurrentGrid(int[][] grid){
+//        currentGrid = grid;
+//    }
+//    
+
+    /**
+     *
+     * @param grid
+     */
     public void setCurrentGrid(Grid grid){
-        currentGrid = grid.getGrid();
+        currentGrid = grid;
     }
 
     @Override
     public boolean rowCheck(int index, int num) {
         for(int i = 0; i < 9; i++){
-            if(currentGrid[index][i] == num){
+            if(currentGrid.getNum(new Point(index, i)) == num){
                 return false;
             }
         }
@@ -43,7 +52,7 @@ public class Checker implements IChecker{
     @Override
     public boolean colCheck(int index, int num) {
         for(int i = 0; i < 9; i++){
-            if(currentGrid[i][index] == num){
+            if(currentGrid.getNum(new Point(i, index)) == num){
                 return false;
             }
         }
@@ -56,7 +65,7 @@ public class Checker implements IChecker{
         int c = col - col%3;
         for (int i = r; i < r+3; i++) {
             for (int j = c; j < c+3; j++) {
-                if (currentGrid[i][j] == num) {
+                if (currentGrid.getNum(new Point(i, j)) == num) {
                     return false;
                 }
             }
@@ -65,7 +74,7 @@ public class Checker implements IChecker{
     }
     
     @Override
-    public boolean checkOneNumber(int[][] grid, int row, int col, int num){
+    public boolean checkNum(Grid grid, int row, int col, int num){
         currentGrid = grid;
         boolean result = rowCheck(row, num) 
                       && colCheck(col, num)
@@ -73,21 +82,21 @@ public class Checker implements IChecker{
         return result;
     }
     
-    @Override
-    public boolean checkAllNumbers(int row, int col){
-        int num = 1;
-        do{
-            if(rowCheck(row, num) 
-            && colCheck(col, num)
-            && sqrCheck(row, col, num)){
-                if(col < 9){
-                    checkAllNumbers(row, col++);
-                } else if (row < 9){
-                    checkAllNumbers(row++, 0);
-                }
-                num++;
-            }
-            return false;
-        }while(num < 10);
-    }
+//    @Override
+//    public boolean checkAll(int row, int col){
+//        int num = 1;
+//        do{
+//            if(rowCheck(row, num) 
+//            && colCheck(col, num)
+//            && sqrCheck(row, col, num)){
+//                if(col < 9){
+//                    checkAll(row, col++);
+//                } else if (row < 9){
+//                    checkAll(row++, 0);
+//                }
+//                num++;
+//            }
+//            return false;
+//        }while(num < 10);
+//    }
 }

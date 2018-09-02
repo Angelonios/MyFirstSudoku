@@ -16,8 +16,19 @@ import objects.Solver;
  */
 public interface IGame {
     
+    /**
+     *
+     */
     public static final int GAME_LEVEL_EASY = 0;
+
+    /**
+     *
+     */
     public static final int GAME_LEVEL_MEDIUM = 1;
+
+    /**
+     *
+     */
     public static final int GAME_LEVEL_HARD = 2;
     
     /**
@@ -54,7 +65,7 @@ public interface IGame {
     public Grid getSolvedGrid();
     
     /**
-     * Returns solver module, which takes a Grid as parameter and solves it.
+     * Returns solver module, which takes a Grid_old as parameter and solves it.
      * @return solver module.
      */
     public Solver getSolver();
